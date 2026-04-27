@@ -226,7 +226,7 @@
             <h2>Очередь</h2>
             <div class="action-btns">
                 <button class="btn-sq" onclick="importFromClipboard()" title="Импорт">📥</button>
-                <button class="btn-sq" onclick="exportToClipboard()" title="Экспорт">📤</button>
+                <button class="btn-sq" onclick="exportToClipboard()" title="Экспорт">📋</button>
                 <button class="btn-sq del" onclick="clearList()" title="Очистить">🗑️</button>
             </div>
         </div>
@@ -338,7 +338,6 @@
     function exportToClipboard() {
         const items = list.querySelectorAll('li');
         if (items.length === 0) return;
-        let res = "Наша очередь\n";
         items.forEach((item, index) => {
             res += `${startNumber + index} лот - ${item.querySelector('.name').innerText}!\n`;
         });
