@@ -1,0 +1,387 @@
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f4f4f4;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	height: 100vh;
+	padding-top: 40px;
+}
+
+main {
+	background: white;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	width: 360px;
+	text-align: center;
+}
+
+h2 {
+	font-size: 22px;
+	font-weight: bold;
+	margin: 20px 0 10px;
+}
+
+h3 {
+	font-size: 18px;
+	font-weight: bold;
+	margin-top: 20px;
+	color: #000;
+}
+
+#lottery-selector {
+	display: block;
+}
+
+#lottery-create-entry {
+	margin-bottom: 20px;
+}
+
+.lottery-button,
+#open-create-form {
+	display: block;
+	width: 100%;
+	padding: 14px;
+	font-size: 20px;
+	font-weight: bold;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	margin-bottom: 10px;
+}
+
+.lottery-button {
+	background-color: #ff9800;
+	text-decoration: none;
+}
+
+.lottery-button:hover {
+	background-color: #e68a00;
+}
+
+#open-create-form {
+	background-color: #4CAF50;
+	margin-bottom: 0; /* Убираем нижний отступ, так как дальше идет полоса */
+}
+
+#open-create-form:hover {
+	background-color: #388e3c;
+}
+
+/* Стили для новой разделительной полосы */
+.separator {
+	border: none;
+	border-top: 1px solid #ddd;
+	margin: 20px 0;
+	width: 100%;
+}
+
+#lotteries-list {
+	margin-top: 10px;
+}
+
+#lotteries-list button {
+	display: block;
+	width: 100%;
+	background-color: #0080ff;
+	color: white;
+	font-weight: bold;
+	font-size: 20px;
+	border: none;
+	border-radius: 5px;
+	padding: 14px 0;
+	margin-bottom: 10px;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+#lotteries-list button:hover {
+	background-color: #006ad1;
+}
+
+#lottery-create-form {
+	display: none;
+	flex-direction: column;
+	gap: 12px;
+	margin-top: 20px;
+}
+
+#lottery-create-form input {
+	padding: 12px;
+	font-size: 16px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+
+#lottery-create-buttons {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 20px;
+	width: 100%;
+	gap: 12px;
+}
+
+#create-back-button {
+	all: unset;
+	display: inline-block;
+	width: 30%;
+	padding: 12px;
+	font-size: 16px;
+	text-align: center;
+	background-color: #e0e0e0;
+	color: #333;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+#create-back-button:hover {
+	background-color: #d5d5d5;
+}
+
+#create-lottery-button {
+	all: unset;
+	display: inline-block;
+	width: 48%;
+	padding: 12px;
+	font-size: 16px;
+	font-weight: bold;
+	text-align: center;
+	background-color: #4CAF50;
+	color: white;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+#create-lottery-button:hover {
+	background-color: #45a049;
+}
+
+#admin-panel {
+	display: none;
+	flex-direction: column;
+	align-items: center;
+	width: 100%; /* Гарантируем, что панель занимает всю ширину main */
+}
+
+/* Кнопка НАЗАД теперь по ширине как остальные кнопки */
+#back-button {
+	box-sizing: border-box;
+	width: 100%;
+	background-color: #e0e0e0;
+	color: #333;
+	border: none;
+	padding: 14px; /* Сделали высоту 14px как у Удалить/Включить оплату */
+	font-size: 18px; /* Шрифт 18px для единообразия */
+	font-weight: bold;
+	border-radius: 5px;
+	cursor: pointer;
+	text-align: center;
+	margin-top: 10px; /* Отступ сверху, чтобы не прилипала */
+	transition: background-color 0.3s ease;
+}
+
+#back-button:hover {
+	background-color: #d5d5d5;
+}
+
+#delete-lottery-button {
+	box-sizing: border-box;
+	background-color: #f44336;
+	color: white;
+	font-size: 18px;
+	font-weight: bold;
+	padding: 14px;
+	border: none;
+	cursor: pointer;
+	border-radius: 5px;
+	width: 100%;
+	transition: background-color 0.3s ease;
+}
+
+#delete-lottery-button:hover {
+	background-color: #d32f2f;
+}
+
+#payment-toggle-button {
+	box-sizing: border-box;
+	background-color: #4CAF50;
+	color: white;
+	font-size: 18px;
+	font-weight: bold;
+	margin-top: 10px;
+	padding: 14px;
+	border: none;
+	cursor: pointer;
+	border-radius: 5px;
+	width: 100%;
+	transition: background-color 0.3s ease;
+}
+
+/* ИСПРАВЛЕНО: Возвращен потерянный селектор для ховера оплаты */
+#payment-toggle-button:hover {
+	background-color: #388e3c;
+}
+
+#available-count {
+	font-size: 18px;
+	font-weight: bold;
+	margin-top: 15px;
+	color: #333;
+}
+
+#view-numbers-button {
+	background-color: #2196F3;
+	color: white;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+#view-numbers-button:hover {
+	background-color: #0b7dda;
+}
+
+#free-numbers-list {
+	font-size: 20px;
+	font-weight: bold;
+	margin-top: 10px;
+	color: green;
+	text-align: center;
+}
+
+#numbersModal {
+	display: none;
+	position: fixed;
+	z-index: 1000;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.4);
+	justify-content: center;
+	align-items: center;
+}
+
+#numbersModal .modal-content {
+	background-color: #fefefe;
+	padding: 20px;
+	border: 1px solid #888;
+	border-radius: 10px;
+	width: 60%;
+	height: 40%;
+	max-width: 600px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	text-align: center;
+}
+
+#numbersModal .close {
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+#numbersModal .close:hover,
+#numbersModal .close:focus {
+	color: black;
+	text-decoration: none;
+}
+
+#all-numbers-list {
+	margin-top: 20px;
+	font-size: 20px;
+	line-height: 1.5;
+	text-align: left;
+	max-height: 600px;
+	overflow-y: auto;
+}
+
+#users-list {
+	background: #fafafa;
+	padding: 12px;
+	border-radius: 5px;
+	box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+	width: 90%;
+	max-height: 300px;
+	overflow-y: auto;
+	text-align: left;
+	margin: 12px auto 0 auto;
+}
+
+#users-list div {
+	padding: 6px;
+	border-bottom: 1px solid #ddd;
+}
+
+#users-list div:last-child {
+	border-bottom: none;
+}
+
+#login-screen {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	width: 100%;
+}
+
+#login-screen .login-box {
+	background: white;
+	padding: 30px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	width: 320px;
+	text-align: center;
+}
+
+#login-screen h2 {
+	font-size: 20px;
+	margin: 0 0 20px;
+}
+
+#login-screen input[type="password"] {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 12px;
+	font-size: 16px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	margin-bottom: 12px;
+}
+
+#login-screen button[type="submit"] {
+	width: 100%;
+	padding: 14px;
+	font-size: 18px;
+	font-weight: bold;
+	color: white;
+	background-color: #4CAF50;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+#login-screen button[type="submit"]:hover {
+	background-color: #388e3c;
+}
+
+#login-screen button[type="submit"]:disabled {
+	background-color: #a5d6a7;
+	cursor: default;
+}
