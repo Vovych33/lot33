@@ -1,0 +1,74 @@
+#alertOverlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+}
+
+#alertBox, #confirmBox {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  font-family: Arial, sans-serif;
+  text-align: left;
+  min-width: 300px;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -60%); }
+  to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+#alertText, #confirmText {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 16px;
+  color: #333;
+}
+
+.btn-right {
+  text-align: right;
+}
+
+#alertBox button,
+#confirmBox button {
+  padding: 8px 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  transition: background-color 0.3s ease;
+  margin-left: 10px;
+}
+
+#alertBox button:hover,
+#confirmBox button:hover {
+  background-color: #45a049;
+}
+
+#alertBox .free {
+  color: green;
+  font-weight: bold;
+  display: inline;
+}
+
+#alertBox .surprise {
+  color: orange;
+  font-weight: bold;
+  display: inline;
+}
