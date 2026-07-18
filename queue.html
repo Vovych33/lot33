@@ -22,7 +22,6 @@
             justify-content: center;
         }
 
-        /* Скрытие «крестика» в полях типа search */
         input::-webkit-search-decoration,
         input::-webkit-search-cancel-button,
         input::-webkit-search-results-button,
@@ -213,14 +212,6 @@
 <body>
 
 <div class="container">
-    <form class="hidden-fields" aria-hidden="true">
-        <input type="text" name="username">
-        <input type="password" name="password">
-        <input type="email" name="email">
-        <input type="text" name="address">
-        <input type="text" name="card">
-    </form>
-
     <div class="header">
         <div class="top-row">
             <h2>Очередь</h2>
@@ -231,23 +222,14 @@
             </div>
         </div>
         <div class="search-box">
-            <input type="search" id="searchInput" 
-                   placeholder="Поиск" 
-                   autocomplete="off" 
-                   role="presentation">
+            <input type="search" id="searchInput" placeholder="Поиск" autocomplete="off" role="presentation">
         </div>
     </div>
 
     <ul id="peopleList"></ul>
 
     <div class="footer">
-        <input type="search" id="nameInput" 
-               placeholder="Имя участника" 
-               autocomplete="off" 
-               autocorrect="off" 
-               autocapitalize="words" 
-               spellcheck="false"
-               role="presentation">
+        <input type="search" id="nameInput" placeholder="Имя участника">
         <button id="addBtn">Ок</button>
     </div>
 </div>
