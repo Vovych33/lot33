@@ -33,6 +33,61 @@ h3 {
 	color: #000;
 }
 
+#login-screen {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 80vh;
+	width: 100%;
+}
+
+#login-screen .login-box {
+	background: white;
+	padding: 30px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	width: 320px;
+	text-align: center;
+}
+
+#login-screen h2 {
+	font-size: 20px;
+	margin: 0 0 20px;
+}
+
+#login-screen input[type="text"] {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 12px;
+	font-size: 16px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	margin-bottom: 12px;
+}
+
+#login-screen button[type="submit"] {
+	width: 100%;
+	padding: 14px;
+	font-size: 18px;
+	font-weight: bold;
+	color: white;
+	background-color: #4CAF50;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+#login-screen button[type="submit"]:hover {
+	background-color: #388e3c;
+}
+
+#login-screen button[type="submit"]:disabled {
+	background-color: #a5d6a7;
+	cursor: default;
+}
+
 #lottery-selector {
 	display: block;
 }
@@ -67,14 +122,13 @@ h3 {
 
 #open-create-form {
 	background-color: #4CAF50;
-	margin-bottom: 0; /* Убираем нижний отступ, так как дальше идет полоса */
+	margin-bottom: 0;
 }
 
 #open-create-form:hover {
 	background-color: #388e3c;
 }
 
-/* Стили для новой разделительной полосы */
 .separator {
 	border: none;
 	border-top: 1px solid #ddd;
@@ -225,7 +279,6 @@ h3 {
 	transition: background-color 0.3s ease;
 }
 
-/* ИСПРАВЛЕНО: Возвращен потерянный селектор для ховера оплаты */
 #payment-toggle-button:hover {
 	background-color: #388e3c;
 }
@@ -329,59 +382,4 @@ h3 {
 
 #users-list div:last-child {
 	border-bottom: none;
-}
-
-#login-screen {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	height: 100vh;
-	width: 100%;
-}
-
-#login-screen .login-box {
-	background: white;
-	padding: 30px;
-	border-radius: 10px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-	width: 320px;
-	text-align: center;
-}
-
-#login-screen h2 {
-	font-size: 20px;
-	margin: 0 0 20px;
-}
-
-#login-screen input[type="password"] {
-	width: 100%;
-	box-sizing: border-box;
-	padding: 12px;
-	font-size: 16px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	margin-bottom: 12px;
-}
-
-#login-screen button[type="submit"] {
-	width: 100%;
-	padding: 14px;
-	font-size: 18px;
-	font-weight: bold;
-	color: white;
-	background-color: #4CAF50;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-	transition: background-color 0.3s ease;
-}
-
-#login-screen button[type="submit"]:hover {
-	background-color: #388e3c;
-}
-
-#login-screen button[type="submit"]:disabled {
-	background-color: #a5d6a7;
-	cursor: default;
 }
