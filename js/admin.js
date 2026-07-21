@@ -31,27 +31,23 @@ onAuthStateChanged(auth, (user) => {
 });
 
 loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    loginError.textContent = "";
+	e.preventDefault();
+	const password = passwordInput.value;
 
-    const password = passwordInput.value;
-    if (!password) return;
+	const submitBtn = loginForm.querySelector("button[type='submit']");
+	submitBtn.disabled = true;
 
-    const submitBtn = loginForm.querySelector("button[type='submit']");
-    submitBtn.disabled = true;
-
-    try {
-        await signInWithEmailAndPassword(auth, ADMIN_EMAIL, password);
-        passwordInput.value = "";
-    } catch (err) {
-        loginError.textContent = "Неверный пароль";
-    } finally {
-        submitBtn.disabled = false;
-    }
+	try {
+	await signInWithEmailAndPassword(auth, ADMIN_EMAIL, password);
+	passwordInput.value = "";
+	} catch (err) {
+	showAlert("Неверный пароль"); 
+	} finally {
+	submitBtn.disabled = false;
+	}
 });
 
 logoutButton?.addEventListener("click", () => signOut(auth));
-// ---------- Конец авторизации ----------
 
 const el = {
 	selector:        document.getElementById("lottery-selector"),
