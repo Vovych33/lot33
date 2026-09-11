@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Очередь копилок</title>
+    <title>Очередь копилки</title>
     <style>
         html { 
             font-size: 16px; 
@@ -46,14 +46,15 @@
         }
         .top-row {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
+            gap: 10px;
             margin-bottom: 15px;
         }
         h2 { margin: 0; color: #27ae60; font-size: 1.25em; }
-        .action-btns { display: flex; gap: 6px; }
+        .action-btns { display: flex; gap: 6px; flex: 1 1 auto; min-width: 0; }
 
-        /* Обновленные адаптивные кнопки с текстом */
         .btn-sq {
             height: 36px;
             padding: 0 10px;
@@ -69,13 +70,23 @@
             font-weight: 500;
             color: #2c3e50;
             transition: 0.2s;
+            flex: 1 1 auto;
+            min-width: 0;
+            white-space: nowrap;
+        }
+        .btn-sq span {
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .btn-sq:hover { background: #ebf7f0; border-color: #27ae60; }
         .btn-sq.del:hover { background: #fff0f0; border-color: #e74c3c; }
 
-        @media (max-width: 400px) {
-            .btn-sq span { display: none; }
-            .btn-sq { width: 36px; padding: 0; font-size: 1em; }
+        /* На узких экранах кнопкам не хватает места рядом с заголовком —
+           переносим их на отдельную строку во всю ширину, текст остаётся видимым */
+        @container (max-width: 380px) {
+            .top-row { flex-direction: column; align-items: stretch; }
+            .action-btns { justify-content: space-between; }
+            .btn-sq { padding: 0 6px; gap: 3px; }
         }
 
         .search-box input {
@@ -201,7 +212,7 @@
             <div class="top-row">
                 <h2>Очередь</h2>
                 <div class="action-btns">
-                    <button class="btn-sq" onclick="importFromClipboard()" title="Импорт">🛠 <span>Вставить</span></button>
+                    <button class="btn-sq" onclick="importFromClipboard()" title="Импорт">⬇ <span>Вставить</span></button>
                     <button class="btn-sq" onclick="exportToClipboard()" title="Экспорт">⎘ <span>Копировать</span></button>
                     <button class="btn-sq del" onclick="clearList()" title="Очистить">✖ <span>Очистить</span></button>
                 </div>
