@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Очередь копилки</title>
+    <title>Очередь копилок</title>
     <style>
         html { 
             font-size: 16px; 
@@ -81,8 +81,6 @@
         .btn-sq:hover { background: #ebf7f0; border-color: #27ae60; }
         .btn-sq.del:hover { background: #fff0f0; border-color: #e74c3c; }
 
-        /* На узких экранах кнопкам не хватает места рядом с заголовком —
-           переносим их на отдельную строку во всю ширину, текст остаётся видимым */
         @container (max-width: 380px) {
             .top-row { flex-direction: column; align-items: stretch; }
             .action-btns { justify-content: space-between; }
@@ -299,7 +297,6 @@
 			return li;
 		}
 
-		// Единый обработчик кликов по кнопкам списка (без хрупких inline onclick)
 		list.addEventListener('click', (e) => {
 			const btn = e.target.closest('button');
 			if (!btn) return;
@@ -358,7 +355,6 @@
 			const sib = dir === 'up' ? item.previousElementSibling : item.nextElementSibling;
 			if (!sib) return;
 
-			// FLIP: запоминаем позиции ДО перестановки
 			const pair = [item, sib];
 			const firstRects = pair.map(el => el.getBoundingClientRect());
 
@@ -368,7 +364,6 @@
 				list.insertBefore(sib, item);
 			}
 
-			// ...и проигрываем анимацию из старой позиции в новую
 			pair.forEach((el, i) => {
 				const delta = firstRects[i].top - el.getBoundingClientRect().top;
 				if (!delta) return;
