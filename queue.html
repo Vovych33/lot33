@@ -2,386 +2,404 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Очередь копилки</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Очередь копилок</title>
     <style>
-		body { 
-			font-family: 'Segoe UI', system-ui, sans-serif; 
-			background: #f4f4f4; 
-			margin: 0;
-			display: flex;
-			justify-content: center;
-		}
+        html { 
+            font-size: 16px; 
+        }
+        body { 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            background: #f4f4f4; 
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        input::-webkit-search-decoration,
+        input::-webkit-search-cancel-button,
+        input::-webkit-search-results-button,
+        input::-webkit-search-results-decoration { display: none; }
 
-		input::-webkit-search-decoration,
-		input::-webkit-search-cancel-button,
-		input::-webkit-search-results-button,
-		input::-webkit-search-results-decoration { display: none; }
+        .container { 
+            background: white; 
+            width: 100%;
+            max-width: 450px; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.05);
+            container-type: inline-size;
+            font-size: clamp(15px, 4cqw, 18px);
+        }
+        @supports not (container-type: inline-size) {
+            .container { font-size: 1rem; }
+        }
+        .header {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 20px 20px 10px 20px;
+            z-index: 100;
+            border-bottom: 1px solid #eef2f0;
+        }
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        h2 { margin: 0; color: #27ae60; font-size: 1.25em; }
+        .action-btns { display: flex; gap: 6px; }
 
-		.container { 
-			background: white; 
-			width: 100%;
-			max-width: 450px; 
-			min-height: 100vh;
-			display: flex;
-			flex-direction: column;
-			position: relative;
-			box-shadow: 0 0 30px rgba(0,0,0,0.05);
-		}
+        /* Обновленные адаптивные кнопки с текстом */
+        .btn-sq {
+            height: 36px;
+            padding: 0 10px;
+            border: 1px solid #eef2f0;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            font-size: 0.8em;
+            font-weight: 500;
+            color: #2c3e50;
+            transition: 0.2s;
+        }
+        .btn-sq:hover { background: #ebf7f0; border-color: #27ae60; }
+        .btn-sq.del:hover { background: #fff0f0; border-color: #e74c3c; }
 
-		.header {
-			position: sticky;
-			top: 0;
-			background: white;
-			padding: 20px 20px 10px 20px;
-			z-index: 100;
-			border-bottom: 1px solid #eef2f0;
-		}
+        @media (max-width: 400px) {
+            .btn-sq span { display: none; }
+            .btn-sq { width: 36px; padding: 0; font-size: 1em; }
+        }
 
-		.top-row {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			margin-bottom: 15px;
-		}
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #f0f4f2;
+            border-radius: 12px;
+            box-sizing: border-box;
+            outline: none;
+            font-size: 0.9em;
+        }
+        #peopleList { 
+            list-style: none; 
+            padding: 20px; 
+            margin: 0; 
+            flex-grow: 1;
+        }
+        li { 
+            background: white; 
+            border: 1px solid #eef2f0; 
+            margin-bottom: 8px; 
+            padding: 10px 12px;
+            display: flex; 
+            align-items: flex-start;
+            border-radius: 14px;
+            transition: 0.3s ease;
+        }
+        li.found {
+            border-color: #f1c40f;
+            background: #fffdf0;
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(241, 196, 15, 0.2);
+        }
+        .number {
+            background: #27ae60;
+            color: white;
+            min-width: 40px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 13px;
+            font-size: 0.7em;
+            font-weight: bold;
+            margin-right: 10px;
+            margin-top: 2px;
+        }
+        .name { 
+            flex: 1; 
+            font-weight: 500; 
+            font-size: 0.95em; 
+            color: #2c3e50;
+            word-break: break-word;
+            line-height: 1.4;
+            padding-right: 10px;
+        }
+        .controls { 
+            display: flex; 
+            gap: 4px; 
+            margin-top: 2px;
+        }
+        .move-btn, .delete-btn { 
+            border: none;
+            background: #f8faf9;
+            width: 30px;
+            height: 30px;
+            cursor: pointer; 
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #95a5a6;
+            font-size: 0.85em;
+        }
+        .move-btn:hover { background: #ebf7f0; color: #27ae60; }
+        .delete-btn:hover { background: #fff0f0; color: #e74c3c; }
 
-		h2 { margin: 0; color: #27ae60; font-size: 20px; }
-
-		.action-btns { display: flex; gap: 8px; }
-
-		.btn-sq {
-			width: 36px;
-			height: 36px;
-			border: 1px solid #eef2f0;
-			border-radius: 10px;
-			background: white;
-			cursor: pointer;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			font-size: 18px;
-			transition: 0.2s;
-		}
-
-		.btn-sq:hover { background: #ebf7f0; border-color: #27ae60; }
-		.btn-sq.del:hover { background: #fff0f0; border-color: #e74c3c; }
-
-		.search-box input {
-			width: 100%;
-			padding: 12px 15px;
-			border: 2px solid #f0f4f2;
-			border-radius: 12px;
-			box-sizing: border-box;
-			outline: none;
-			font-size: 14px;
-		}
-
-		#peopleList { 
-			list-style: none; 
-			padding: 20px; 
-			margin: 0; 
-			flex-grow: 1;
-		}
-
-		li { 
-			background: white; 
-			border: 1px solid #eef2f0; 
-			margin-bottom: 8px; 
-			padding: 10px 12px;
-			display: flex; 
-			align-items: flex-start;
-			border-radius: 14px;
-			transition: 0.3s ease;
-		}
-
-		li.found {
-			border-color: #f1c40f;
-			background: #fffdf0;
-			transform: scale(1.02);
-			box-shadow: 0 4px 12px rgba(241, 196, 15, 0.2);
-		}
-
-		.number {
-			background: #27ae60;
-			color: white;
-			min-width: 40px;
-			height: 26px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			border-radius: 13px;
-			font-size: 11px;
-			font-weight: bold;
-			margin-right: 10px;
-			margin-top: 2px;
-		}
-
-		.name { 
-			flex: 1; 
-			font-weight: 500; 
-			font-size: 15px; 
-			color: #2c3e50;
-			word-break: break-word;
-			line-height: 1.4;
-			padding-right: 10px;
-		}
-
-		.controls { 
-			display: flex; 
-			gap: 4px; 
-			margin-top: 2px;
-		}
-
-		.move-btn, .delete-btn { 
-			border: none;
-			background: #f8faf9;
-			width: 30px;
-			height: 30px;
-			cursor: pointer; 
-			border-radius: 6px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			color: #95a5a6;
-		}
-		.move-btn:hover { background: #ebf7f0; color: #27ae60; }
-		.delete-btn:hover { background: #fff0f0; color: #e74c3c; }
-
-		.footer {
-			position: sticky;
-			bottom: 0;
-			background: white;
-			padding: 15px 20px;
-			border-top: 1px solid #eef2f0;
-			display: flex;
-			gap: 10px;
-		}
-
-		.footer input {
-			flex: 1;
-			padding: 12px;
-			border: 2px solid #ebf7f0;
-			border-radius: 12px;
-			outline: none;
-			font-size: 16px;
-		}
-
-		.footer button {
-			background: #27ae60;
-			color: white;
-			border: none;
-			padding: 0 20px;
-			border-radius: 12px;
-			font-weight: bold;
-			cursor: pointer;
-		}
-
-		.toast {
-			position: fixed;
-			bottom: 85px;
-			left: 50%;
-			transform: translateX(-50%);
-			background: rgba(44, 62, 80, 0.9);
-			color: white;
-			padding: 8px 16px;
-			border-radius: 20px;
-			font-size: 12px;
-			display: none;
-			z-index: 1000;
-		}
-
-		/* Стиль для скрытых полей-обманок */
-		.hidden-fields {
-			position: absolute; 
-			height: 0; 
-			width: 0; 
-			overflow: hidden; 
-			opacity: 0;
-		}
+        .footer {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            padding: 15px 20px;
+            border-top: 1px solid #eef2f0;
+            display: flex;
+            gap: 10px;
+        }
+        .footer input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ebf7f0;
+            border-radius: 12px;
+            outline: none;
+            font-size: 1em;
+        }
+        .footer button {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+        .toast {
+            position: fixed;
+            bottom: 85px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(44, 62, 80, 0.9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            display: none;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <div class="header">
-        <div class="top-row">
-            <h2>Очередь</h2>
-            <div class="action-btns">
-                <button class="btn-sq" onclick="importFromClipboard()" title="Импорт">📥</button>
-                <button class="btn-sq" onclick="exportToClipboard()" title="Экспорт">📄</button>
-                <button class="btn-sq del" onclick="clearList()" title="Очистить">🗑️</button>
+    <div class="container">
+        <div class="header">
+            <div class="top-row">
+                <h2>Очередь</h2>
+                <div class="action-btns">
+                    <button class="btn-sq" onclick="importFromClipboard()" title="Импорт">🛠 <span>Вставить</span></button>
+                    <button class="btn-sq" onclick="exportToClipboard()" title="Экспорт">⎘ <span>Копировать</span></button>
+                    <button class="btn-sq del" onclick="clearList()" title="Очистить">✖ <span>Очистить</span></button>
+                </div>
+            </div>
+            <div class="search-box">
+                <input type="search" id="searchInput" placeholder="Поиск" autocomplete="off" role="presentation">
             </div>
         </div>
-        <div class="search-box">
-            <input type="search" id="searchInput" placeholder="Поиск" autocomplete="off" role="presentation">
+        <ul id="peopleList"></ul>
+        <div class="footer">
+            <input type="search" id="nameInput" placeholder="Имя участника">
+            <button id="addBtn">+</button>
         </div>
     </div>
+    <div id="toast" class="toast">Скопировано!</div>
+    <script>
+		const nameInput = document.getElementById('nameInput');
+		const searchInput = document.getElementById('searchInput');
+		const addBtn = document.getElementById('addBtn');
+		const list = document.getElementById('peopleList');
+		const toast = document.getElementById('toast');
 
-    <ul id="peopleList"></ul>
+		let startNumber = 1;
 
-    <div class="footer">
-        <input type="search" id="nameInput" placeholder="Имя участника">
-        <button id="addBtn">Ок</button>
-    </div>
-</div>
-
-<div id="toast" class="toast">Скопировано!</div>
-
-<script>
-	const nameInput = document.getElementById('nameInput');
-	const searchInput = document.getElementById('searchInput');
-	const addBtn = document.getElementById('addBtn');
-	const list = document.getElementById('peopleList');
-	const toast = document.getElementById('toast');
-
-	let startNumber = 1;
-
-	function showToast(text) {
-		toast.innerText = text;
-		toast.style.display = 'block';
-		setTimeout(() => toast.style.display = 'none', 2000);
-	}
-
-	function save() {
-		const names = Array.from(list.querySelectorAll('.name')).map(s => s.innerText);
-		localStorage.setItem('qData', JSON.stringify({ start: startNumber, names: names }));
-	}
-
-	function load() {
-		const saved = localStorage.getItem('qData');
-		if (saved) {
-			const data = JSON.parse(saved);
-			startNumber = data.start || 1;
-			data.names.forEach(n => list.appendChild(createItem(n)));
-			updateList(false);
+		function showToast(text) {
+			toast.innerText = text;
+			toast.style.display = 'block';
+			setTimeout(() => toast.style.display = 'none', 2000);
 		}
-	}
 
-	function updateList(shouldScroll = true) {
-		const items = list.querySelectorAll('li');
-		const query = searchInput.value.toLowerCase().trim();
-
-		items.forEach((item, index) => {
-			const curNum = startNumber + index;
-			item.querySelector('.number').innerText = curNum;
-			
-			const nameText = item.querySelector('.name').innerText.toLowerCase();
-			if (query !== "" && (nameText.includes(query) || curNum.toString() === query)) {
-				item.classList.add('found');
-				if (shouldScroll) item.scrollIntoView({ behavior: 'smooth', block: 'center' });
-			} else {
-				item.classList.remove('found');
+		function save() {
+			try {
+				const names = Array.from(list.querySelectorAll('.name')).map(s => s.textContent);
+				localStorage.setItem('qData', JSON.stringify({ start: startNumber, names: names }));
+			} catch (err) {
+				console.warn('Не удалось сохранить очередь:', err);
 			}
-		});
-		save();
-	}
+		}
 
-	function createItem(text) {
-		const li = document.createElement('li');
-		li.innerHTML = `
-			<div class="number"></div>
-			<span class="name">${text}</span>
-			<div class="controls">
-				<button class="move-btn" onclick="move(this.parentElement.parentElement, 'up')">▲</button>
-				<button class="move-btn" onclick="move(this.parentElement.parentElement, 'down')">▼</button>
-				<button class="delete-btn" onclick="del(this.parentElement.parentElement)">&times;</button>
-			</div>
-		`;
-		return li;
-	}
+		function load() {
+			try {
+				const saved = localStorage.getItem('qData');
+				if (!saved) return;
+				const data = JSON.parse(saved);
+				startNumber = data.start || 1;
+				(data.names || []).forEach(n => list.appendChild(createItem(n)));
+				updateList(false);
+			} catch (err) {
+				console.warn('Не удалось загрузить очередь:', err);
+			}
+		}
 
-	async function importFromClipboard() {
-		try {
-			const text = await navigator.clipboard.readText();
-			const lines = text.split('\n');
-			let foundCount = 0;
-			lines.forEach(line => {
-				const match = line.match(/(\d+)\s*лот\s*-\s*(.+?)(?:!|$)/);
-				if (match) {
-					if (foundCount === 0) startNumber = parseInt(match[1]);
-					list.appendChild(createItem(match[2].trim()));
-					foundCount++;
+		function updateList(shouldScroll = true) {
+			const items = list.querySelectorAll('li');
+			const query = searchInput.value.toLowerCase().trim();
+
+			items.forEach((item, index) => {
+				const curNum = startNumber + index;
+				item.querySelector('.number').innerText = curNum;
+				
+				const nameText = item.querySelector('.name').textContent.toLowerCase();
+				if (query !== "" && (nameText.includes(query) || curNum.toString() === query)) {
+					item.classList.add('found');
+					if (shouldScroll) item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+				} else {
+					item.classList.remove('found');
 				}
 			});
-			if (foundCount > 0) {
-				updateList(false);
-				showToast(`Импортировано: ${foundCount}`);
-			} else {
-				alert("Нет данных в нужном формате");
-			}
-		} catch (err) {
-			alert("Разрешите доступ к буферу обмена!");
-		}
-	}
-
-	function exportToClipboard() {
-		const items = list.querySelectorAll('li');
-		if (items.length === 0) return;
-		let res = "";
-		items.forEach((item, index) => {
-			res += `${startNumber + index} лот - ${item.querySelector('.name').innerText}!\n`;
-		});
-		navigator.clipboard.writeText(res).then(() => showToast("Скопировано!"));
-	}
-
-	function clearList() {
-		if (confirm("Очистить всё?")) {
-			list.innerHTML = '';
-			startNumber = 1;
 			save();
-			showToast("Список очищен");
 		}
-	}
 
-	function move(item, dir) {
-		const sib = dir === 'up' ? item.previousElementSibling : item.nextElementSibling;
-		if (sib) {
-			const offset = item.offsetTop - sib.offsetTop;
-			item.style.transform = `translateY(${-offset}px)`;
-			sib.style.transform = `translateY(${offset}px)`;
-			setTimeout(() => {
-				item.style.transition = sib.style.transition = 'none';
-				item.style.transform = sib.style.transform = '';
-				if (dir === 'up') list.insertBefore(item, sib);
-				else list.insertBefore(sib, item);
-				updateList(false);
-				setTimeout(() => {
-					item.style.transition = sib.style.transition = 'transform 0.3s ease';
-				}, 10);
-			}, 300);
+		function createItem(text) {
+			const li = document.createElement('li');
+			li.innerHTML = `
+				<div class="number"></div>
+				<span class="name"></span>
+				<div class="controls">
+					<button class="move-btn" data-action="up" title="Вверх">▲</button>
+					<button class="move-btn" data-action="down" title="Вниз">▼</button>
+					<button class="delete-btn" data-action="del" title="Удалить">&times;</button>
+				</div>
+			`;
+			li.querySelector('.name').textContent = text;
+			return li;
 		}
-	}
 
-	function del(item) {
-		if (item === list.firstElementChild) {
-			startNumber++;
+		// Единый обработчик кликов по кнопкам списка (без хрупких inline onclick)
+		list.addEventListener('click', (e) => {
+			const btn = e.target.closest('button');
+			if (!btn) return;
+			const li = btn.closest('li');
+			switch (btn.dataset.action) {
+				case 'up': move(li, 'up'); break;
+				case 'down': move(li, 'down'); break;
+				case 'del': del(li); break;
+			}
+		});
+
+		async function importFromClipboard() {
+			try {
+				const text = await navigator.clipboard.readText();
+				const lines = text.split('\n');
+				let foundCount = 0;
+				lines.forEach(line => {
+					const match = line.match(/(\d+)\s*лот\s*-\s*(.+?)(?:!|$)/);
+					if (match) {
+						if (foundCount === 0) startNumber = parseInt(match[1]);
+						list.appendChild(createItem(match[2].trim()));
+						foundCount++;
+					}
+				});
+				if (foundCount > 0) {
+					updateList(false);
+					showToast(`Импортировано: ${foundCount}`);
+				} else {
+					alert("Нет данных в нужном формате");
+				}
+			} catch (err) {
+				alert("Разрешите доступ к буферу обмена!");
+			}
 		}
-		
-		item.remove();
 
-		if (list.children.length === 0) {
-			startNumber = 1;
+		function exportToClipboard() {
+			const items = list.querySelectorAll('li');
+			if (items.length === 0) return;
+			let res = "";
+			items.forEach((item, index) => {
+				res += `${startNumber + index} лот - ${item.querySelector('.name').textContent}!\n`;
+			});
+			navigator.clipboard.writeText(res).then(() => showToast("Скопировано!"));
 		}
-		
-		updateList(false);
-	}
 
-	addBtn.onclick = () => {
-		const val = nameInput.value.trim();
-		if (val) {
-			list.appendChild(createItem(val));
+		function clearList() {
+			if (confirm("Очистить всё?")) {
+				list.innerHTML = '';
+				startNumber = 1;
+				save();
+				showToast("Список очищен");
+			}
+		}
+
+		function move(item, dir) {
+			const sib = dir === 'up' ? item.previousElementSibling : item.nextElementSibling;
+			if (!sib) return;
+
+			// FLIP: запоминаем позиции ДО перестановки
+			const pair = [item, sib];
+			const firstRects = pair.map(el => el.getBoundingClientRect());
+
+			if (dir === 'up') {
+				list.insertBefore(item, sib);
+			} else {
+				list.insertBefore(sib, item);
+			}
+
+			// ...и проигрываем анимацию из старой позиции в новую
+			pair.forEach((el, i) => {
+				const delta = firstRects[i].top - el.getBoundingClientRect().top;
+				if (!delta) return;
+				el.style.transition = 'none';
+				el.style.transform = `translateY(${delta}px)`;
+				requestAnimationFrame(() => {
+					el.style.transition = 'transform 0.25s ease';
+					el.style.transform = '';
+				});
+				el.addEventListener('transitionend', () => { el.style.transition = ''; }, { once: true });
+			});
+
 			updateList(false);
-			nameInput.value = '';
-			nameInput.focus();
 		}
-	};
 
-	searchInput.oninput = () => updateList(true);
-	nameInput.onkeypress = (e) => {
-		if (e.key === 'Enter') addBtn.click();
-	};
+		function del(item) {
+			if (item === list.firstElementChild) {
+				startNumber++;
+			}
+			item.remove();
+			if (list.children.length === 0) {
+				startNumber = 1;
+			}
+			updateList(false);
+		}
 
-	window.onload = load;
-</script>
+		addBtn.onclick = () => {
+			const val = nameInput.value.trim();
+			if (val) {
+				list.appendChild(createItem(val));
+				updateList(false);
+				nameInput.value = '';
+				nameInput.focus();
+			}
+		};
+
+		searchInput.oninput = () => updateList(true);
+		nameInput.onkeypress = (e) => {
+			if (e.key === 'Enter') addBtn.click();
+		};
+
+		window.onload = load;
+	</script>
 </body>
 </html>
