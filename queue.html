@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Очередь копилок</title>
     <style>
-        html { 
-            font-size: 16px; 
-        }
-        body { 
-            font-family: 'Segoe UI', system-ui, sans-serif; 
-            background: #f4f4f4; 
+        html { font-size: 16px; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f4f4f4;
             margin: 0;
             display: flex;
             justify-content: center;
@@ -21,10 +19,10 @@
         input::-webkit-search-results-button,
         input::-webkit-search-results-decoration { display: none; }
 
-        .container { 
-            background: white; 
+        .container {
+            background: white;
             width: 100%;
-            max-width: 450px; 
+            max-width: 450px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -96,18 +94,18 @@
             outline: none;
             font-size: 0.9em;
         }
-        #peopleList { 
-            list-style: none; 
-            padding: 20px; 
-            margin: 0; 
+        #peopleList {
+            list-style: none;
+            padding: 20px;
+            margin: 0;
             flex-grow: 1;
         }
-        li { 
-            background: white; 
-            border: 1px solid #eef2f0; 
-            margin-bottom: 8px; 
+        li {
+            background: white;
+            border: 1px solid #eef2f0;
+            margin-bottom: 8px;
             padding: 10px 12px;
-            display: flex; 
+            display: flex;
             align-items: flex-start;
             border-radius: 14px;
             transition: 0.3s ease;
@@ -132,26 +130,26 @@
             margin-right: 10px;
             margin-top: 2px;
         }
-        .name { 
-            flex: 1; 
-            font-weight: 500; 
-            font-size: 0.95em; 
+        .name {
+            flex: 1;
+            font-weight: 500;
+            font-size: 0.95em;
             color: #2c3e50;
             word-break: break-word;
             line-height: 1.4;
             padding-right: 10px;
         }
-        .controls { 
-            display: flex; 
-            gap: 4px; 
+        .controls {
+            display: flex;
+            gap: 4px;
             margin-top: 2px;
         }
-        .move-btn, .delete-btn { 
+        .move-btn, .delete-btn {
             border: none;
             background: #f8faf9;
             width: 30px;
             height: 30px;
-            cursor: pointer; 
+            cursor: pointer;
             border-radius: 6px;
             display: flex;
             align-items: center;
@@ -200,8 +198,73 @@
             border-radius: 20px;
             font-size: 0.75rem;
             display: none;
-            z-index: 1000;
+            z-index: 3000;
         }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            width: 100%;
+            max-width: 420px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .modal-title {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1em;
+            line-height: 1.4;
+        }
+        .modal-title:not(:last-child) { margin-bottom: 14px; }
+        .modal-textarea {
+            width: 100%;
+            height: 160px;
+            padding: 10px;
+            border: 2px solid #ebf7f0;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 0.9em;
+            resize: vertical;
+            outline: none;
+            margin-top: 14px;
+        }
+        .modal-textarea:focus { border-color: #27ae60; }
+        .modal-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+        }
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #eef2f0;
+            background: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            color: #2c3e50;
+            font-family: inherit;
+        }
+        .modal-btn:hover { background: #f4f7f5; }
+        .modal-btn.primary {
+            background: #27ae60;
+            color: #fff;
+            border-color: #27ae60;
+        }
+        .modal-btn.primary:hover { background: #219150; }
     </style>
 </head>
 <body>
@@ -227,185 +290,260 @@
     </div>
     <div id="toast" class="toast">Скопировано!</div>
     <script>
-		const nameInput = document.getElementById('nameInput');
-		const searchInput = document.getElementById('searchInput');
-		const addBtn = document.getElementById('addBtn');
-		const list = document.getElementById('peopleList');
-		const toast = document.getElementById('toast');
+        const nameInput = document.getElementById('nameInput');
+        const searchInput = document.getElementById('searchInput');
+        const addBtn = document.getElementById('addBtn');
+        const list = document.getElementById('peopleList');
+        const toast = document.getElementById('toast');
 
-		let startNumber = 1;
+        let startNumber = 1;
 
-		function showToast(text) {
-			toast.innerText = text;
-			toast.style.display = 'block';
-			setTimeout(() => toast.style.display = 'none', 2000);
-		}
+        function showToast(text) {
+            toast.innerText = text;
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 2000);
+        }
 
-		function save() {
-			try {
-				const names = Array.from(list.querySelectorAll('.name')).map(s => s.textContent);
-				localStorage.setItem('qData', JSON.stringify({ start: startNumber, names: names }));
-			} catch (err) {
-				console.warn('Не удалось сохранить очередь:', err);
-			}
-		}
+        function showModal({ title, textarea, buttons }) {
+            return new Promise(resolve => {
+                const ov = document.createElement('div');
+                ov.className = 'modal-overlay';
+                const box = document.createElement('div');
+                box.className = 'modal-box';
 
-		function load() {
-			try {
-				const saved = localStorage.getItem('qData');
-				if (!saved) return;
-				const data = JSON.parse(saved);
-				startNumber = data.start || 1;
-				(data.names || []).forEach(n => list.appendChild(createItem(n)));
-				updateList(false);
-			} catch (err) {
-				console.warn('Не удалось загрузить очередь:', err);
-			}
-		}
+                if (title) {
+                    const t = document.createElement('div');
+                    t.className = 'modal-title';
+                    t.textContent = title;
+                    box.appendChild(t);
+                }
 
-		function updateList(shouldScroll = true) {
-			const items = list.querySelectorAll('li');
-			const query = searchInput.value.toLowerCase().trim();
+                let ta = null;
+                if (textarea) {
+                    ta = document.createElement('textarea');
+                    ta.className = 'modal-textarea';
+                    if (textarea.placeholder) ta.placeholder = textarea.placeholder;
+                    if (textarea.value) ta.value = textarea.value;
+                    box.appendChild(ta);
+                }
 
-			items.forEach((item, index) => {
-				const curNum = startNumber + index;
-				item.querySelector('.number').innerText = curNum;
-				
-				const nameText = item.querySelector('.name').textContent.toLowerCase();
-				if (query !== "" && (nameText.includes(query) || curNum.toString() === query)) {
-					item.classList.add('found');
-					if (shouldScroll) item.scrollIntoView({ behavior: 'smooth', block: 'center' });
-				} else {
-					item.classList.remove('found');
-				}
-			});
-			save();
-		}
+                const btns = document.createElement('div');
+                btns.className = 'modal-btns';
+                buttons.forEach(b => {
+                    const el = document.createElement('button');
+                    el.className = 'modal-btn' + (b.primary ? ' primary' : '');
+                    el.textContent = b.text;
+                    el.onclick = () => {
+                        const val = b.getter ? b.getter(ta) : b.value;
+                        ov.remove();
+                        resolve(val);
+                    };
+                    btns.appendChild(el);
+                });
+                box.appendChild(btns);
+                ov.appendChild(box);
+                ov.addEventListener('click', e => {
+                    if (e.target === ov) { ov.remove(); resolve(null); }
+                });
+                document.body.appendChild(ov);
 
-		function createItem(text) {
-			const li = document.createElement('li');
-			li.innerHTML = `
-				<div class="number"></div>
-				<span class="name"></span>
-				<div class="controls">
-					<button class="move-btn" data-action="up" title="Вверх">▲</button>
-					<button class="move-btn" data-action="down" title="Вниз">▼</button>
-					<button class="delete-btn" data-action="del" title="Удалить">&times;</button>
-				</div>
-			`;
-			li.querySelector('.name').textContent = text;
-			return li;
-		}
+                if (ta) {
+                    ta.focus();
+                    ta.select();
+                }
+            });
+        }
 
-		list.addEventListener('click', (e) => {
-			const btn = e.target.closest('button');
-			if (!btn) return;
-			const li = btn.closest('li');
-			switch (btn.dataset.action) {
-				case 'up': move(li, 'up'); break;
-				case 'down': move(li, 'down'); break;
-				case 'del': del(li); break;
-			}
-		});
+        function save(names) {
+            try {
+                const arr = names || Array.from(list.querySelectorAll('.name')).map(s => s.textContent);
+                localStorage.setItem('qData', JSON.stringify({ start: startNumber, names: arr }));
+            } catch (err) {
+                console.warn('Не удалось сохранить очередь:', err);
+            }
+        }
+
+        function load() {
+            try {
+                const saved = localStorage.getItem('qData');
+                if (!saved) return;
+                const data = JSON.parse(saved);
+                startNumber = data.start || 1;
+                (data.names || []).forEach(n => list.appendChild(createItem(n)));
+                updateList(false, false);
+            } catch (err) {
+                console.warn('Не удалось загрузить очередь:', err);
+            }
+        }
+
+        function updateList(shouldScroll = true, shouldSave = true) {
+            const items = list.querySelectorAll('li');
+            const query = searchInput.value.toLowerCase().trim();
+            const names = new Array(items.length);
+            let scrollTarget = null;
+
+            items.forEach((item, index) => {
+                const curNum = startNumber + index;
+                item.querySelector('.number').innerText = curNum;
+                const nameEl = item.querySelector('.name');
+                names[index] = nameEl.textContent;
+                const nameText = nameEl.textContent.toLowerCase();
+                if (query !== "" && (nameText.includes(query) || curNum.toString() === query)) {
+                    item.classList.add('found');
+                    if (!scrollTarget) scrollTarget = item;
+                } else {
+                    item.classList.remove('found');
+                }
+            });
+
+            if (shouldSave) save(names);
+            if (shouldScroll && scrollTarget) {
+                scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function createItem(text) {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <div class="number"></div>
+                <span class="name"></span>
+                <div class="controls">
+                    <button class="move-btn" data-action="up" title="Вверх">▲</button>
+                    <button class="move-btn" data-action="down" title="Вниз">▼</button>
+                    <button class="delete-btn" data-action="del" title="Удалить">&times;</button>
+                </div>
+            `;
+            li.querySelector('.name').textContent = text;
+            return li;
+        }
+
+        list.addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const li = btn.closest('li');
+            switch (btn.dataset.action) {
+                case 'up': move(li, 'up'); break;
+                case 'down': move(li, 'down'); break;
+                case 'del': del(li); break;
+            }
+        });
+
+        async function readClipboardText() {
+            try {
+                if (navigator.clipboard && navigator.clipboard.readText) {
+                    return await navigator.clipboard.readText();
+                }
+            } catch (e) {
+                console.warn('Clipboard:', e);
+            }
+            return '';
+        }
 
 		async function importFromClipboard() {
-			try {
-				const text = await navigator.clipboard.readText();
-				const lines = text.split('\n');
-				let foundCount = 0;
-				lines.forEach(line => {
-					const match = line.match(/(\d+)\s*лот\s*-\s*(.+?)(?:!|$)/);
-					if (match) {
-						if (foundCount === 0) startNumber = parseInt(match[1]);
-						list.appendChild(createItem(match[2].trim()));
-						foundCount++;
-					}
-				});
-				if (foundCount > 0) {
-					updateList(false);
-					showToast(`Импортировано: ${foundCount}`);
-				} else {
-					alert("Нет данных в нужном формате");
-				}
-			} catch (err) {
-				alert("Разрешите доступ к буферу обмена!");
-			}
-		}
-
-		function exportToClipboard() {
-			const items = list.querySelectorAll('li');
-			if (items.length === 0) return;
-			let res = "";
-			items.forEach((item, index) => {
-				res += `${startNumber + index} лот - ${item.querySelector('.name').textContent}!\n`;
-			});
-			navigator.clipboard.writeText(res).then(() => showToast("Скопировано!"));
-		}
-
-		function clearList() {
-			if (confirm("Очистить всё?")) {
-				list.innerHTML = '';
-				startNumber = 1;
-				save();
-				showToast("Список очищен");
-			}
-		}
-
-		function move(item, dir) {
-			const sib = dir === 'up' ? item.previousElementSibling : item.nextElementSibling;
-			if (!sib) return;
-
-			const pair = [item, sib];
-			const firstRects = pair.map(el => el.getBoundingClientRect());
-
-			if (dir === 'up') {
-				list.insertBefore(item, sib);
-			} else {
-				list.insertBefore(sib, item);
+			const text = await readClipboardText();
+			if (!text || !text.trim()) {
+				showToast('Буфер обмена пуст');
+				return;
 			}
 
-			pair.forEach((el, i) => {
-				const delta = firstRects[i].top - el.getBoundingClientRect().top;
-				if (!delta) return;
-				el.style.transition = 'none';
-				el.style.transform = `translateY(${delta}px)`;
-				requestAnimationFrame(() => {
-					el.style.transition = 'transform 0.25s ease';
-					el.style.transform = '';
-				});
-				el.addEventListener('transitionend', () => { el.style.transition = ''; }, { once: true });
+			const parsed = [];
+			text.split(/\r?\n/).forEach(line => {
+				const m = line.match(/(\d+)\s*лот\s*-\s*(.+?)(?:!|$)/);
+				if (m) parsed.push({ num: parseInt(m[1]), name: m[2].trim() });
 			});
 
-			updateList(false);
-		}
-
-		function del(item) {
-			if (item === list.firstElementChild) {
-				startNumber++;
+			if (!parsed.length) {
+				showToast('Нет данных в нужном формате');
+				return;
 			}
-			item.remove();
+
 			if (list.children.length === 0) {
-				startNumber = 1;
+				startNumber = parsed[0].num;
 			}
+
+			parsed.forEach(p => list.appendChild(createItem(p.name)));
 			updateList(false);
+			showToast(`Добавлено: ${parsed.length}`);
 		}
 
-		addBtn.onclick = () => {
-			const val = nameInput.value.trim();
-			if (val) {
-				list.appendChild(createItem(val));
-				updateList(false);
-				nameInput.value = '';
-				nameInput.focus();
-			}
-		};
+        function exportToClipboard() {
+            const items = list.querySelectorAll('li');
+            if (items.length === 0) return;
+            const res = Array.from(items).map((item, i) =>
+                `${startNumber + i} лот - ${item.querySelector('.name').textContent}!`
+            ).join('\n');
+            navigator.clipboard.writeText(res)
+                .then(() => showToast('Скопировано!'))
+                .catch(() => showToast('Не удалось скопировать'));
+        }
 
-		searchInput.oninput = () => updateList(true);
-		nameInput.onkeypress = (e) => {
-			if (e.key === 'Enter') addBtn.click();
-		};
+        async function clearList() {
+            if (!list.children.length) return;
+            const ok = await showModal({
+                title: `Очистить всё? В списке ${list.children.length} записей.`,
+                buttons: [
+                    { text: 'Отмена', value: false },
+                    { text: 'Очистить', value: true, primary: true }
+                ]
+            });
+            if (!ok) return;
+            list.innerHTML = '';
+            startNumber = 1;
+            save([]);
+            showToast('Список очищен');
+        }
 
-		window.onload = load;
-	</script>
+        function move(item, dir) {
+            const sib = dir === 'up' ? item.previousElementSibling : item.nextElementSibling;
+            if (!sib) return;
+
+            const pair = [item, sib];
+            const firstRects = pair.map(el => el.getBoundingClientRect());
+
+            if (dir === 'up') {
+                list.insertBefore(item, sib);
+            } else {
+                list.insertBefore(sib, item);
+            }
+
+            pair.forEach((el, i) => {
+                const delta = firstRects[i].top - el.getBoundingClientRect().top;
+                if (!delta) return;
+                el.style.transition = 'none';
+                el.style.transform = `translateY(${delta}px)`;
+                requestAnimationFrame(() => {
+                    el.style.transition = 'transform 0.25s ease';
+                    el.style.transform = '';
+                });
+                el.addEventListener('transitionend', () => { el.style.transition = ''; }, { once: true });
+            });
+
+            updateList(false);
+        }
+
+        function del(item) {
+            if (item === list.firstElementChild) startNumber++;
+            item.remove();
+            if (list.children.length === 0) startNumber = 1;
+            updateList(false);
+        }
+
+        addBtn.onclick = () => {
+            const val = nameInput.value.trim();
+            if (val) {
+                list.appendChild(createItem(val));
+                updateList(false);
+                nameInput.value = '';
+                nameInput.focus();
+            }
+        };
+
+        searchInput.oninput = () => updateList(true, false);
+        nameInput.onkeypress = (e) => {
+            if (e.key === 'Enter') addBtn.click();
+        };
+
+        window.onload = load;
+    </script>
 </body>
 </html>
